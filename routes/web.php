@@ -11,6 +11,20 @@ use App\Http\Controllers\Explorer\TransactionController;
 use App\Http\Controllers\Explorer\ValidatorsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\Response;
+
+// Отдача Vite-сборки (CSS/JS) через Laravel, если веб-сервер не отдаёт public/build
+Route::get('/build/assets/{filename}', function (string $filename): Response {
+    if (! preg_match('/^[a-zA-Z0-9_.-]+\\.(css|js)$/', $filename)) {
+        abort(404);
+    }
+    $path = public_path('build/assets/' . $filename);
+    if (! is_file($path)) {
+        abort(404);
+    }
+    $mime = str_ends_with($filename, '.css') ? 'text/css' : 'application/javascript';
+    return response()->file($path, ['Content-Type' => $mime]);
+})->where('filename', '[a-zA-Z0-9_.-]+\\.(css|js)');
 
 // Публичный блокчейн-сканер (GND Explorer)
 Route::get('/', [DashboardController::class, 'index'])->name('explorer.dashboard');

@@ -11,19 +11,18 @@
 @if($useBuild)
     @php
         $manifest = json_decode(file_get_contents($manifestPath), true);
-        $base = rtrim(config('app.asset_url', config('app.url')), '/');
     @endphp
     @foreach($entries as $entry)
         @if(isset($manifest[$entry]['file']))
             @if(str_ends_with($manifest[$entry]['file'], '.css'))
-    <link rel="stylesheet" href="{{ $base }}/build/{{ $manifest[$entry]['file'] }}" />
+    <link rel="stylesheet" href="{{ asset('build/' . $manifest[$entry]['file']) }}" />
             @endif
         @endif
     @endforeach
     @foreach($entries as $entry)
         @if(isset($manifest[$entry]['file']))
             @if(str_ends_with($manifest[$entry]['file'], '.js'))
-    <script type="module" src="{{ $base }}/build/{{ $manifest[$entry]['file'] }}"></script>
+    <script type="module" src="{{ asset('build/' . $manifest[$entry]['file']) }}"></script>
             @endif
         @endif
     @endforeach
