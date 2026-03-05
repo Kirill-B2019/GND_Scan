@@ -133,6 +133,8 @@ class DashboardController extends Controller
         $totalBlocks = $block['TotalBlocks'] ?? $block['total_blocks'] ?? 0;
         $totalTx = $tx['TotalTransactions'] ?? $tx['total_transactions'] ?? 0;
         $txPerMin = $tx['TransactionsPerMinute'] ?? $tx['transactions_per_minute'] ?? 0;
+        $tpsFromApi = $tx['TransactionsPerSecond'] ?? $tx['transactions_per_second'] ?? null;
+        $tps = $tpsFromApi !== null && $tpsFromApi !== '' ? round((float) $tpsFromApi, 2) : ($txPerMin > 0 ? round($txPerMin / 60, 2) : 0);
         $avgFee = $tx['AverageFee'] ?? $tx['average_fee'] ?? null;
         $validators = $consensus['ValidatorsCount'] ?? $consensus['validators_count'] ?? null;
 
@@ -141,8 +143,8 @@ class DashboardController extends Controller
             'total_blocks' => $totalBlocks,
             'transactions_count' => $totalTx,
             'total_transactions' => $totalTx,
-            'tps' => $txPerMin > 0 ? round($txPerMin / 60, 2) : 0,
-            'transactions_per_second' => $txPerMin > 0 ? round($txPerMin / 60, 2) : 0,
+            'tps' => $tps,
+            'transactions_per_second' => $tps,
             'avg_fee' => $avgFee !== null ? round((float) $avgFee, 6) : null,
             'average_gas_price' => $avgFee,
             'validators_count' => $validators,
