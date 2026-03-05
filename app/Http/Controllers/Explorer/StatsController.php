@@ -14,6 +14,27 @@ class StatsController extends Controller
         $txMetrics = GndNodeApi::isConfigured() ? GndNodeApi::getTransactionMetrics() : ['success' => false, 'data' => null];
         $feeMetrics = GndNodeApi::isConfigured() ? GndNodeApi::getFeeMetrics() : ['success' => false, 'data' => null];
 
+        $data = $metrics['data'] ?? null;
+        if ($data && is_array($data)) {
+            $bm = $data['BlockMetrics'] ?? $data['block_metrics'] ?? [];
+            $total = (int) ($bm['TotalBlocks'] ?? $bm['total_blocks'] ?? 0);
+            $fromApi = (float) ($bm['BlocksPerMinute'] ?? $bm['blocks_per_minute'] ?? 0);
+            // Значение из API неверное, если больше общего числа блоков или явно завышено (> 10000)
+            if ($total > 0 && ($fromApi <= 0 || $fromApi > $total || $fromApi > 10000)) {
+                $computed = self::computeBlocksPerMinute($total);
+                if ($computed !== null) {
+                    $bm = $data['BlockMetrics'] ?? $data['block_metrics'] ?? [];
+                    $bm['BlocksPerMinute'] = $bm['blocks_per_minute'] = $computed;
+                    if (isset($data['BlockMetrics'])) {
+                        $data['BlockMetrics'] = $bm;
+                    } else {
+                        $data['block_metrics'] = $bm;
+                    }
+                    $metrics['data'] = $data;
+                }
+            }
+        }
+
         $sections = self::buildReadableSections(
             $metrics['data'] ?? null,
             $txMetrics['data'] ?? null,
@@ -43,8 +64,12 @@ class StatsController extends Controller
                 $rows[] = ['Блоков всего', number_format((int) $v, 0, ',', ' ')];
             }
             if (isset($block['BlocksPerMinute']) || isset($block['blocks_per_minute'])) {
-                $v = $block['BlocksPerMinute'] ?? $block['blocks_per_minute'] ?? 0;
-                $rows[] = ['Блоков в минуту', round((float) $v, 2)];
+                $v = (float) ($block['BlocksPerMinute'] ?? $block['blocks_per_minute'] ?? 0);
+                $totalBlocks = (int) ($block['TotalBlocks'] ?? $block['total_blocks'] ?? 0);
+                // Показываем только если значение осмысленное (уже может быть исправлено в index())
+                if ($v >= 0 && ($totalBlocks <= 0 || ($v <= $totalBlocks && $v <= 10000))) {
+                    $rows[] = ['Блоков в минуту', round($v, 2)];
+                }
             }
             if (isset($block['GasUsed']) || isset($block['gas_used'])) {
                 $rows[] = ['Gas использовано', number_format((int) ($block['GasUsed'] ?? $block['gas_used'] ?? 0), 0, ',', ' ')];
@@ -115,6 +140,40 @@ class StatsController extends Controller
         }
 
         return $sections;
+    }
+
+    /**
+     * Вычисляет среднее число блоков в минуту по времени первого и последнего блока.
+     */
+    private static function computeBlocksPerMinute(int $totalBlocks): ?float
+    {
+        $latest = GndNodeApi::getLatestBlock();
+        if (! ($latest['success'] ?? false) || empty($latest['data'])) {
+            return null;
+        }
+        $firstBlockNum = $totalBlocks > 1 ? 1 : 0;
+        $first = GndNodeApi::getBlockByNumber($firstBlockNum);
+        if (! ($first['success'] ?? false) || empty($first['data'])) {
+            return null;
+        }
+        $tsLatest = $latest['data']['Timestamp'] ?? $latest['data']['timestamp'] ?? null;
+        $tsFirst = $first['data']['Timestamp'] ?? $first['data']['timestamp'] ?? null;
+        if (! $tsLatest || ! $tsFirst) {
+            return null;
+        }
+        try {
+            $t1 = \Carbon\Carbon::parse($tsFirst)->timestamp;
+            $t2 = \Carbon\Carbon::parse($tsLatest)->timestamp;
+        } catch (\Throwable) {
+            return null;
+        }
+        $seconds = $t2 - $t1;
+        if ($seconds <= 0) {
+            return null;
+        }
+        $minutes = $seconds / 60.0;
+
+        return $totalBlocks / max(1 / 60, $minutes);
     }
 
     private static function formatFee($v): string

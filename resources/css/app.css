@@ -72,6 +72,22 @@
 .explorer-card-hover:hover { border-color: rgba(197, 255, 65, 0.4); background-color: var(--color-surface-dark); }
 .explorer-row-hover:hover { background-color: var(--color-surface-dark); }
 
+/* Бейджи типов транзакций (цвета из темы) */
+.tx-badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.tx-badge--primary { background-color: rgba(59, 71, 37, 0.6); color: var(--color-primary); border: 1px solid rgba(197, 255, 65, 0.3); }
+.tx-badge--teal { background-color: rgba(82, 184, 170, 0.2); color: var(--color-accent-teal); border: 1px solid rgba(82, 184, 170, 0.4); }
+.tx-badge--purple { background-color: rgba(150, 125, 255, 0.2); color: var(--color-accent-purple); border: 1px solid rgba(150, 125, 255, 0.4); }
+.tx-badge--purple-2 { background-color: rgba(151, 97, 220, 0.2); color: var(--color-accent-purple-2); border: 1px solid rgba(151, 97, 220, 0.4); }
+.tx-badge--purple-3 { background-color: rgba(210, 128, 229, 0.2); color: var(--color-accent-purple-3); border: 1px solid rgba(210, 128, 229, 0.4); }
+.tx-badge--muted { background-color: var(--color-surface-dark); color: var(--color-text-muted-4); border: 1px solid var(--color-surface-dark-2); }
+
 /* Видимость (вместо inline style) */
 .display-none { display: none; }
 .display-block { display: block; }

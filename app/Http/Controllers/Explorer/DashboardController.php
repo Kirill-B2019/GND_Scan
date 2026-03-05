@@ -103,20 +103,17 @@ class DashboardController extends Controller
     }
 
     /**
-     * Если в метриках ноды нет количества блоков — подставляем высоту цепи из последнего блока.
+     * Количество блоков всегда берём из высоты последнего блока (актуальное состояние цепи).
+     * Метрики ноды могут быть неверными или не обновляться.
      */
     private static function ensureBlocksCountFromChain(array $metrics, array $blocks): array
     {
-        $count = (int) ($metrics['blocks_count'] ?? $metrics['total_blocks'] ?? 0);
-        if ($count > 0) {
-            return $metrics;
-        }
         if (empty($blocks)) {
             return $metrics;
         }
         $latest = $blocks[0];
         $height = (int) ($latest['Index'] ?? $latest['index'] ?? $latest['Height'] ?? $latest['height'] ?? $latest['ID'] ?? $latest['id'] ?? 0);
-        if ($height > 0) {
+        if ($height >= 0) {
             $metrics['blocks_count'] = $height;
             $metrics['total_blocks'] = $height;
         }

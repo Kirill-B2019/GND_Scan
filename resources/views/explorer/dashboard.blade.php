@@ -101,7 +101,7 @@
         <section class="dashboard-section min-w-0 w-full">
             <div class="flex items-center justify-between mb-3 gap-2 min-w-0">
                 <h2 class="text-base sm:text-lg font-semibold explorer-text truncate">Последние транзакции</h2>
-                <a href="{{ route('explorer.stats') }}" class="text-sm explorer-primary explorer-link shrink-0 py-2 touch-manual">Все</a>
+                <a href="{{ route('explorer.transactions') }}" class="text-sm explorer-primary explorer-link shrink-0 py-2 touch-manual">Все</a>
             </div>
             <div id="dashboard-tx-list" class="rounded-xl border explorer-border explorer-bg-card overflow-hidden w-full">
                 @forelse($transactions as $tx)

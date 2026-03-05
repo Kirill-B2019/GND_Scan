@@ -34,6 +34,7 @@
                 </div>
                 <nav class="flex flex-wrap items-center gap-1 sm:gap-4 lg:gap-6 text-sm -mx-1">
                     <a href="{{ route('explorer.dashboard') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Главная</a>
+                    <a href="{{ route('explorer.transactions') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Транзакции</a>
                     <a href="{{ route('explorer.stats') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Статистика</a>
                     <a href="{{ route('explorer.validators') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Валидаторы</a>
                     @auth

@@ -18,6 +18,7 @@ Route::get('/explorer/data', [DashboardController::class, 'data'])->name('explor
 Route::get('/search', [SearchController::class, 'search'])->name('explorer.search');
 Route::get('/explorer/search/suggest', [SearchController::class, 'suggest'])->name('explorer.search.suggest');
 Route::get('/block/{number}', [BlockController::class, 'show'])->name('explorer.block.show');
+Route::get('/transactions', [TransactionController::class, 'index'])->name('explorer.transactions');
 Route::get('/tx/{hash}', [TransactionController::class, 'show'])->name('explorer.transaction.show');
 Route::get('/address/{address}', [AddressController::class, 'show'])->where('address', '.*')->name('explorer.address.show');
 Route::get('/contract/{address}', [ContractController::class, 'show'])->where('address', '.*')->name('explorer.contract.show');
