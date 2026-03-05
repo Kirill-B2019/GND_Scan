@@ -8,7 +8,7 @@
     <title>@yield('title', 'Ганимед Explorer') — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-vite-assets />
 </head>
 <body class="font-sans antialiased explorer-bg explorer-text min-h-screen flex flex-col">
     <header class="sticky top-0 z-40 border-b explorer-border explorer-bg-header backdrop-blur shrink-0">
