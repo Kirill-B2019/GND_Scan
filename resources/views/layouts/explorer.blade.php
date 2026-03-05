@@ -34,7 +34,7 @@
                     @auth
                         <a href="{{ route('dashboard') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Кабинет</a>
                     @else
-                        <a href="{{ route('login') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Вход</a>
+                        <span class="explorer-text-muted opacity-50 cursor-not-allowed px-3 py-2.5 rounded-lg min-h-[44px] flex items-center" aria-disabled="true" title="Временно отключено">Вход</span>
                     @endauth
                 </nav>
             </div>

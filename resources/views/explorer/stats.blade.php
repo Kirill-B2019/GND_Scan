@@ -7,25 +7,25 @@
         <a href="{{ route('explorer.dashboard') }}" class="text-sm explorer-text-muted explorer-link transition-colors">← Главная</a>
     </div>
 
-    <h1 class="text-2xl font-bold explorer-text-white mb-2">Статистика и аналитика</h1>
-    <p class="explorer-text-muted text-sm mb-8">Метрики сети ГАНИМЕД по данным ноды.</p>
+    <h1 class="text-xl sm:text-2xl font-bold explorer-text-white mb-2">Статистика и аналитика</h1>
+    <p class="explorer-text-muted text-xs sm:text-sm mb-6 sm:mb-8">Метрики сети ГАНИМЕД по данным ноды.</p>
 
     @if(!$gndConfigured)
         <div class="rounded-xl border explorer-border explorer-bg-card p-8 text-center explorer-text-muted">
             Задайте <code class="explorer-bg-surface px-1.5 py-0.5 rounded explorer-text-muted-4">GND_NODE_URL</code> в .env для загрузки данных.
         </div>
     @elseif(!empty($sections))
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             @foreach($sections as $section)
                 <div class="rounded-xl border explorer-border explorer-bg-card overflow-hidden">
-                    <h2 class="px-4 py-3 border-b explorer-border font-semibold explorer-text explorer-bg-surface">
+                    <h2 class="px-3 sm:px-4 py-3 border-b explorer-border text-base sm:text-lg font-semibold explorer-text explorer-bg-surface">
                         {{ $section['title'] }}
                     </h2>
-                    <dl class="p-4 space-y-3">
+                    <dl class="p-3 sm:p-4 space-y-3">
                         @foreach($section['rows'] as $row)
-                            <div class="flex justify-between items-baseline gap-4">
-                                <dt class="explorer-text-muted text-sm shrink-0">{{ $row[0] }}</dt>
-                                <dd class="font-mono explorer-primary text-sm text-right break-all">{{ $row[1] }}</dd>
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-1 sm:gap-4">
+                                <dt class="explorer-text-muted text-xs sm:text-sm shrink-0">{{ $row[0] }}</dt>
+                                <dd class="font-mono explorer-primary text-xs sm:text-sm text-right break-all">{{ $row[1] }}</dd>
                             </div>
                         @endforeach
                     </dl>

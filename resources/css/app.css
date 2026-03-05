@@ -83,6 +83,52 @@
 .mix-blend-hard-light { mix-blend-mode: hard-light; }
 .mix-blend-plus-darker { mix-blend-mode: plus-darker; }
 
+/* Сетка карточек «Состояние сети»: без наезжания на сторону */
+.dashboard-cards-grid {
+    display: grid;
+    width: 100%;
+    max-width: 100%;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 640px) {
+    .dashboard-cards-grid {
+        gap: 0.75rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-bottom: 2.5rem;
+    }
+}
+@media (min-width: 1024px) {
+    .dashboard-cards-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+.dashboard-metric-card-validators {
+    grid-column: span 2;
+}
+@media (min-width: 640px) {
+    .dashboard-metric-card-validators {
+        grid-column: span 1;
+    }
+}
+
+/* Карточка метрики: подпись и значение в колонке, без переполнения */
+.dashboard-metric-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+
+/* Секции «Последние блоки» / «Последние транзакции» */
+.dashboard-section {
+    overflow: hidden;
+}
+.dashboard-list-row {
+    box-sizing: border-box;
+}
+
 /* ========== Прогресс-бар времени до обновления ========== */
 .dashboard-refresh-bar-wrap {
     display: block;
@@ -100,19 +146,34 @@
     min-height: 8px;
     min-width: 4px;
     width: var(--refresh-bar-pct, 100%);
-    background-color: var(--refresh-bar-fill);
+    background-color: var(--color-primary);
     border-radius: 9999px;
     transition: width 200ms linear;
     box-sizing: border-box;
 }
 
+/* Мобильная адаптация: тап без задержки, перенос длинных строк */
+.touch-manual {
+    touch-action: manipulation;
+}
+.word-break-all {
+    word-break: break-all;
+}
+
 /* Подпись KB в углу экрана */
 .footer-kb {
     position: fixed;
-    right: 16px;
-    bottom: 10px;
-    font-size: 11px;
-    color: #707070;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    pointer-events: none;
+    right: 16px !important;
+    bottom: 10px !important;
+    font-size: 11px !important;
+    color: #707070 !important;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    pointer-events: none !important;
+}
+@media (max-width: 640px) {
+    .footer-kb {
+        right: 8px;
+        bottom: 8px;
+        font-size: 9px;
+    }
 }
