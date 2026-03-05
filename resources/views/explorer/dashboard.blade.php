@@ -33,27 +33,27 @@
                 <div id="dashboard-refresh-bar" class="dashboard-refresh-bar"></div>
             </div>
         </div>
-        <div id="dashboard-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10">
-            <div class="rounded-xl border explorer-border explorer-bg-card p-4 explorer-card-hover transition-colors">
+        <div id="dashboard-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-6 sm:mb-10">
+            <div class="rounded-xl border explorer-border explorer-bg-card p-3 sm:p-4 explorer-card-hover transition-colors">
                 <div class="explorer-text-muted text-xs uppercase tracking-wide">Блоков</div>
-                <div id="dashboard-blocks-count" class="text-xl font-mono font-semibold explorer-primary mt-1">{{ number_format($metrics['blocks_count'] ?? $metrics['total_blocks'] ?? 0, 0, ',', ' ') }}</div>
+                <div id="dashboard-blocks-count" class="text-lg sm:text-xl font-mono font-semibold explorer-primary mt-1">{{ number_format($metrics['blocks_count'] ?? $metrics['total_blocks'] ?? 0, 0, ',', ' ') }}</div>
             </div>
-            <div class="rounded-xl border explorer-border explorer-bg-card p-4 explorer-card-hover transition-colors">
+            <div class="rounded-xl border explorer-border explorer-bg-card p-3 sm:p-4 explorer-card-hover transition-colors">
                 <div class="explorer-text-muted text-xs uppercase tracking-wide">Транзакций</div>
-                <div id="dashboard-tx-count" class="text-xl font-mono font-semibold explorer-primary mt-1">{{ number_format($metrics['transactions_count'] ?? $metrics['total_transactions'] ?? 0, 0, ',', ' ') }}</div>
+                <div id="dashboard-tx-count" class="text-lg sm:text-xl font-mono font-semibold explorer-primary mt-1">{{ number_format($metrics['transactions_count'] ?? $metrics['total_transactions'] ?? 0, 0, ',', ' ') }}</div>
             </div>
-            <div class="rounded-xl border explorer-border explorer-bg-card p-4 explorer-card-hover transition-colors">
+            <div class="rounded-xl border explorer-border explorer-bg-card p-3 sm:p-4 explorer-card-hover transition-colors">
                 <div class="explorer-text-muted text-xs uppercase tracking-wide">TPS</div>
-                <div id="dashboard-tps" class="text-xl font-mono font-semibold explorer-primary mt-1">{{ $metrics['tps'] ?? $metrics['transactions_per_second'] ?? '—' }}</div>
+                <div id="dashboard-tps" class="text-lg sm:text-xl font-mono font-semibold explorer-primary mt-1">{{ $metrics['tps'] ?? $metrics['transactions_per_second'] ?? '—' }}</div>
             </div>
-            <div class="rounded-xl border explorer-border explorer-bg-card p-4 explorer-card-hover transition-colors">
+            <div class="rounded-xl border explorer-border explorer-bg-card p-3 sm:p-4 explorer-card-hover transition-colors">
                 <div class="explorer-text-muted text-xs uppercase tracking-wide">Средняя комиссия</div>
                 @php $fee = $metrics['avg_fee'] ?? $metrics['average_gas_price'] ?? null; @endphp
-                <div id="dashboard-avg-fee" class="text-lg font-mono explorer-text mt-1">{{ $fee !== null && $fee !== '' ? $fee . ' GND' : '—' }}</div>
+                <div id="dashboard-avg-fee" class="text-base sm:text-lg font-mono explorer-text mt-1 truncate">{{ $fee !== null && $fee !== '' ? $fee . ' GND' : '—' }}</div>
             </div>
-            <div class="rounded-xl border explorer-border explorer-bg-card p-4 explorer-card-hover transition-colors col-span-2 sm:col-span-1">
+            <div class="rounded-xl border explorer-border explorer-bg-card p-3 sm:p-4 explorer-card-hover transition-colors col-span-2 sm:col-span-1">
                 <div class="explorer-text-muted text-xs uppercase tracking-wide">Валидаторы</div>
-                <div id="dashboard-validators" class="text-xl font-mono font-semibold explorer-primary mt-1">{{ $metrics['validators_count'] ?? '—' }}</div>
+                <div id="dashboard-validators" class="text-lg sm:text-xl font-mono font-semibold explorer-primary mt-1">{{ $metrics['validators_count'] ?? '—' }}</div>
             </div>
         </div>
         @if(empty($blocks) && (empty($metrics['total_blocks']) && empty($metrics['blocks_count'])))
@@ -74,11 +74,11 @@
         </div>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-8">
-        <section>
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold explorer-text">Последние блоки</h2>
-                <a href="{{ route('explorer.stats') }}" class="text-sm explorer-primary explorer-link">Все</a>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <section class="min-w-0">
+            <div class="flex items-center justify-between mb-3 gap-2">
+                <h2 class="text-base sm:text-lg font-semibold explorer-text truncate">Последние блоки</h2>
+                <a href="{{ route('explorer.stats') }}" class="text-sm explorer-primary explorer-link shrink-0 py-2 touch-manual">Все</a>
             </div>
             <div id="dashboard-blocks-list" class="rounded-xl border explorer-border explorer-bg-card overflow-hidden">
                 @forelse($blocks as $block)
@@ -87,10 +87,9 @@
                         $txCount = is_array($block['Transactions'] ?? $block['transactions'] ?? null) ? count($block['Transactions'] ?? $block['transactions']) : ($block['TxCount'] ?? $block['tx_count'] ?? $block['transactions_count'] ?? 0);
                         $ts = $block['Timestamp'] ?? $block['timestamp'] ?? $block['created_at'] ?? '';
                     @endphp
-                    <a href="{{ route('explorer.block.show', ['number' => $id]) }}" class="flex items-center justify-between px-4 py-3 border-b explorer-divider last:border-0 hover:bg-[var(--color-surface-dark)] transition-colors">
+                    <a href="{{ route('explorer.block.show', ['number' => $id]) }}" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 px-3 sm:px-4 py-3 border-b explorer-divider last:border-0 hover:bg-[var(--color-surface-dark)] transition-colors min-h-[44px] sm:min-h-0 touch-manual">
                         <span class="font-mono explorer-primary font-medium">#{{ $id }}</span>
-                        <span class="explorer-text-muted text-sm">{{ $txCount }} tx</span>
-                        <span class="block-time-ago explorer-text-muted text-sm" data-block-ts="{{ $ts ? \Carbon\Carbon::parse($ts)->toIso8601String() : '' }}">{{ $ts ? \Carbon\Carbon::parse($ts)->diffForHumans() : '—' }}</span>
+                        <span class="explorer-text-muted text-xs sm:text-sm">{{ $txCount }} tx · <span class="block-time-ago" data-block-ts="{{ $ts ? \Carbon\Carbon::parse($ts)->toIso8601String() : '' }}">{{ $ts ? \Carbon\Carbon::parse($ts)->diffForHumans() : '—' }}</span></span>
                     </a>
                 @empty
                     <div class="px-4 py-8 explorer-text-muted text-center">Нет данных о блоках</div>
@@ -98,12 +97,12 @@
             </div>
         </section>
 
-        <section>
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold explorer-text">Последние транзакции</h2>
-                <a href="{{ route('explorer.stats') }}" class="text-sm explorer-primary explorer-link">Все</a>
+        <section class="min-w-0">
+            <div class="flex items-center justify-between mb-3 gap-2">
+                <h2 class="text-base sm:text-lg font-semibold explorer-text truncate">Последние транзакции</h2>
+                <a href="{{ route('explorer.stats') }}" class="text-sm explorer-primary explorer-link shrink-0 py-2 touch-manual">Все</a>
             </div>
-            <div id="dashboard-tx-list" class="rounded-xl border explorer-border explorer-bg-card overflow-hidden">
+            <div id="dashboard-tx-list" class="rounded-xl border explorer-border explorer-bg-card overflow-x-auto">
                 @forelse($transactions as $tx)
                     @php
                         $hash = $tx['hash'] ?? '';
@@ -112,11 +111,9 @@
                         $value = $tx['value'] ?? '0';
                         $type = $tx['type'] ?? $tx['Type'] ?? '—';
                     @endphp
-                    <a href="{{ route('explorer.transaction.show', ['hash' => $hash]) }}" class="flex items-center justify-between gap-2 px-4 py-3 border-b explorer-divider last:border-0 hover:bg-[var(--color-surface-dark)] transition-colors flex-wrap sm:flex-nowrap">
-                        <span class="font-mono text-sm explorer-text-muted-4 truncate max-w-[140px] sm:max-w-[180px]" title="{{ $hash }}">{{ $shortHash }}</span>
-                        <span class="explorer-text-muted text-xs shrink-0">{{ $type }}</span>
-                        <span class="explorer-text-muted text-sm font-mono shrink-0">{{ $value }} GND</span>
-                        <span class="text-xs shrink-0 {{ $status === 'confirmed' ? 'text-emerald-400' : ($status === 'failed' ? 'text-red-400' : 'explorer-primary') }}">{{ $status === 'confirmed' ? '✓' : ($status === 'failed' ? '✗' : '…') }}</span>
+                    <a href="{{ route('explorer.transaction.show', ['hash' => $hash]) }}" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 px-3 sm:px-4 py-3 border-b explorer-divider last:border-0 hover:bg-[var(--color-surface-dark)] transition-colors min-h-[44px] sm:min-h-0 touch-manual">
+                        <span class="font-mono text-sm explorer-text-muted-4 truncate" title="{{ $hash }}">{{ $shortHash }}</span>
+                        <span class="explorer-text-muted text-xs sm:text-sm flex items-center gap-2"><span>{{ $type }}</span><span class="font-mono">{{ $value }} GND</span><span class="{{ $status === 'confirmed' ? 'text-emerald-400' : ($status === 'failed' ? 'text-red-400' : 'explorer-primary') }}">{{ $status === 'confirmed' ? '✓' : ($status === 'failed' ? '✗' : '…') }}</span></span>
                     </a>
                 @empty
                     <div class="px-4 py-8 explorer-text-muted text-center">Нет данных о транзакциях</div>
@@ -166,10 +163,9 @@
                         const txCount = (b.Transactions || b.transactions) ? (b.Transactions || b.transactions).length : (b.TxCount ?? b.tx_count ?? b.transactions_count ?? 0);
                         const ts = b.Timestamp ?? b.timestamp ?? b.created_at ?? '';
                         const tsAttr = ts ? encodeURIComponent(typeof ts === 'string' ? ts : (ts && ts.toString && ts.toString()) || '') : '';
-                        return '<a href="' + BLOCK_URL + '/' + id + '" class="flex items-center justify-between px-4 py-3 border-b explorer-divider last:border-0 explorer-row-hover transition-colors">' +
+                        return '<a href="' + BLOCK_URL + '/' + id + '" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 px-3 sm:px-4 py-3 border-b explorer-divider last:border-0 explorer-row-hover transition-colors min-h-[44px] sm:min-h-0 touch-manual">' +
                             '<span class="font-mono explorer-primary font-medium">#' + id + '</span>' +
-                            '<span class="explorer-text-muted text-sm">' + txCount + ' tx</span>' +
-                            '<span class="block-time-ago explorer-text-muted text-sm" data-block-ts="' + tsAttr + '">' + timeAgo(ts) + '</span></a>';
+                            '<span class="explorer-text-muted text-xs sm:text-sm">' + txCount + ' tx · <span class="block-time-ago" data-block-ts="' + tsAttr + '">' + timeAgo(ts) + '</span></span></a>';
                     }).join('');
                 }
 

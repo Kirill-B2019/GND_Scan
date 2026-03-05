@@ -14,12 +14,12 @@
     <header class="sticky top-0 z-40 border-b explorer-border explorer-bg-header backdrop-blur shrink-0">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex flex-col gap-3 py-3 sm:py-2">
-                <div class="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 sm:gap-3 min-w-0">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 min-w-0">
                     <a href="{{ route('explorer.dashboard') }}" class="flex items-center gap-2 shrink-0 py-1 sm:py-0 min-h-[44px] sm:min-h-0 items-center">
                         <span class="text-lg sm:text-xl font-bold explorer-primary">ГАНИМЕД</span>
                         <span class="explorer-text-muted text-sm hidden sm:inline font-normal">Explorer</span>
                     </a>
-                    <form action="{{ route('explorer.search') }}" method="get" class="flex flex-col xs:flex-row flex-1 min-w-0 gap-2 sm:gap-0 sm:ml-0">
+                    <form action="{{ route('explorer.search') }}" method="get" class="flex flex-col sm:flex-row flex-1 min-w-0 gap-2 sm:gap-0 sm:ml-0">
                         <label for="search" class="sr-only">Поиск</label>
                         <input type="search" name="q" id="search" placeholder="Адрес, хэш, блок…"
                                class="w-full min-w-0 rounded-lg border explorer-input px-3 sm:px-4 py-2.5 sm:py-2 text-sm min-h-[44px] sm:min-h-0"
