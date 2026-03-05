@@ -4,11 +4,58 @@ namespace App\Http\Controllers\Explorer;
 
 use App\Http\Controllers\Controller;
 use App\Services\GndNodeApi;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
+    /**
+     * Подсказки для выпадающего списка поиска: по формату ввода возвращаем варианты (тип, подпись, url).
+     */
+    public function suggest(Request $request): JsonResponse
+    {
+        $q = trim(preg_replace('/\s+/', '', (string) $request->input('q', '')));
+        $suggestions = [];
+
+        if (strlen($q) < 1) {
+            return response()->json(['suggestions' => []]);
+        }
+
+        if (is_numeric($q)) {
+            $suggestions[] = [
+                'type' => 'block',
+                'label' => 'Блок #' . $q,
+                'url' => route('explorer.block.show', ['number' => $q]),
+            ];
+        }
+
+        if (strlen($q) === 64 && ctype_xdigit($q)) {
+            $short = substr($q, 0, 10) . '…' . substr($q, -6);
+            $suggestions[] = [
+                'type' => 'transaction',
+                'label' => 'Транзакция ' . $short,
+                'url' => route('explorer.transaction.show', ['hash' => $q]),
+            ];
+        }
+
+        if (preg_match('/^(GN_|GND|GNDct|0x)[a-zA-Z0-9]+$/i', $q)) {
+            $addr = str_starts_with(strtolower($q), '0x') ? 'GND' . substr($q, 2) : $q;
+            $suggestions[] = [
+                'type' => 'address',
+                'label' => 'Адрес ' . (strlen($addr) > 20 ? substr($addr, 0, 10) . '…' . substr($addr, -8) : $addr),
+                'url' => route('explorer.address.show', ['address' => $addr]),
+            ];
+            $suggestions[] = [
+                'type' => 'contract',
+                'label' => 'Контракт ' . (strlen($addr) > 20 ? substr($addr, 0, 10) . '…' : $addr),
+                'url' => route('explorer.contract.show', ['address' => $addr]),
+            ];
+        }
+
+        return response()->json(['suggestions' => $suggestions]);
+    }
+
     public function search(Request $request): RedirectResponse
     {
         $q = trim((string) $request->input('q', ''));

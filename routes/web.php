@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [DashboardController::class, 'index'])->name('explorer.dashboard');
 Route::get('/explorer/data', [DashboardController::class, 'data'])->name('explorer.dashboard.data');
 Route::get('/search', [SearchController::class, 'search'])->name('explorer.search');
+Route::get('/explorer/search/suggest', [SearchController::class, 'suggest'])->name('explorer.search.suggest');
 Route::get('/block/{number}', [BlockController::class, 'show'])->name('explorer.block.show');
 Route::get('/tx/{hash}', [TransactionController::class, 'show'])->name('explorer.transaction.show');
 Route::get('/address/{address}', [AddressController::class, 'show'])->where('address', '.*')->name('explorer.address.show');

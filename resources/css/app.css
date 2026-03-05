@@ -129,6 +129,21 @@
     box-sizing: border-box;
 }
 
+/* Поиск: выпадающий список совпадений */
+.explorer-search-dropdown a.explorer-search-suggestion {
+    display: block;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.explorer-search-dropdown a.explorer-search-suggestion:hover {
+    background-color: var(--color-surface-dark);
+}
+.explorer-search-dropdown:not(.display-none) {
+    display: block;
+}
+
 /* ========== Прогресс-бар времени до обновления ========== */
 .dashboard-refresh-bar-wrap {
     display: block;

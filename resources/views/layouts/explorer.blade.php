@@ -19,13 +19,18 @@
                         <span class="text-lg sm:text-xl font-bold explorer-primary">ГАНИМЕД</span>
                         <span class="explorer-text-muted text-sm hidden sm:inline font-normal">Explorer</span>
                     </a>
-                    <form action="{{ route('explorer.search') }}" method="get" class="flex flex-col sm:flex-row flex-1 min-w-0 gap-2 sm:gap-0 sm:ml-0">
-                        <label for="search" class="sr-only">Поиск</label>
-                        <input type="search" name="q" id="search" placeholder="Адрес, хэш, блок…"
-                               class="w-full min-w-0 rounded-lg border explorer-input px-3 sm:px-4 py-2.5 sm:py-2 text-sm min-h-[44px] sm:min-h-0"
-                               value="{{ request('q', '') }}">
-                        <button type="submit" class="rounded-lg explorer-btn-primary px-4 py-2.5 sm:py-2 text-sm font-medium shrink-0 transition-colors min-h-[44px] sm:min-h-0 sm:ml-2">Найти</button>
-                    </form>
+                    <div class="explorer-search-wrap flex-1 min-w-0 relative flex flex-col sm:flex-row gap-2 sm:gap-0">
+                        <form action="{{ route('explorer.search') }}" method="get" class="flex flex-col sm:flex-row flex-1 min-w-0 gap-2 sm:gap-0 sm:ml-0" id="explorer-search-form">
+                            <label for="search" class="sr-only">Поиск</label>
+                            <div class="relative flex-1 min-w-0">
+                                <input type="search" name="q" id="search" placeholder="Адрес, хэш, блок…" autocomplete="off"
+                                       class="w-full min-w-0 rounded-lg border explorer-input px-3 sm:px-4 py-2.5 sm:py-2 text-sm min-h-[44px] sm:min-h-0"
+                                       value="{{ request('q', '') }}" aria-expanded="false" aria-controls="explorer-search-dropdown" aria-autocomplete="list">
+                                <div id="explorer-search-dropdown" class="explorer-search-dropdown absolute left-0 right-0 top-full z-50 mt-1 rounded-lg border explorer-border explorer-bg-card shadow-lg py-1 max-h-[280px] overflow-y-auto display-none" role="listbox"></div>
+                            </div>
+                            <button type="submit" class="rounded-lg explorer-btn-primary px-4 py-2.5 sm:py-2 text-sm font-medium shrink-0 transition-colors min-h-[44px] sm:min-h-0 sm:ml-2">Найти</button>
+                        </form>
+                    </div>
                 </div>
                 <nav class="flex flex-wrap items-center gap-1 sm:gap-4 lg:gap-6 text-sm -mx-1">
                     <a href="{{ route('explorer.dashboard') }}" class="explorer-text-muted explorer-link transition-colors px-3 py-2.5 rounded-lg min-h-[44px] flex items-center touch-manual">Главная</a>
@@ -67,6 +72,56 @@
         </div>
     </footer>
     <div class="footer-kb">| KB @CerbeRus - Nexus Invest Team</div>
+    <script>
+    (function() {
+        var form = document.getElementById('explorer-search-form');
+        var input = document.getElementById('search');
+        var dropdown = document.getElementById('explorer-search-dropdown');
+        if (!form || !input || !dropdown) return;
+        var suggestUrl = '{{ route("explorer.search.suggest", [], false) }}';
+        var debounceTimer;
+        function closeDropdown() {
+            dropdown.classList.add('display-none');
+            dropdown.innerHTML = '';
+            input.setAttribute('aria-expanded', 'false');
+        }
+        function showDropdown(items) {
+            dropdown.innerHTML = '';
+            if (!items || items.length === 0) { closeDropdown(); return; }
+            items.forEach(function(s) {
+                var a = document.createElement('a');
+                a.href = s.url;
+                a.className = 'explorer-search-suggestion block px-3 py-2 text-sm explorer-text explorer-row-hover truncate';
+                a.textContent = s.label;
+                a.setAttribute('role', 'option');
+                dropdown.appendChild(a);
+            });
+            dropdown.classList.remove('display-none');
+            input.setAttribute('aria-expanded', 'true');
+        }
+        function fetchSuggest() {
+            var q = (input.value || '').trim().replace(/\s+/g, '');
+            if (q.length < 1) { closeDropdown(); return; }
+            fetch(suggestUrl + '?q=' + encodeURIComponent(q))
+                .then(function(r) { return r.json(); })
+                .then(function(data) { showDropdown(data.suggestions || []); })
+                .catch(function() { closeDropdown(); });
+        }
+        input.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(fetchSuggest, 220);
+        });
+        input.addEventListener('focus', function() {
+            if (input.value.trim().length >= 1) fetchSuggest();
+        });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeDropdown(); input.blur(); }
+        });
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target) && e.target !== input) closeDropdown();
+        });
+    })();
+    </script>
     @stack('scripts')
 </body>
 </html>
