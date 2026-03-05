@@ -56,6 +56,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Asset URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used for generating asset URLs (CSS, JS, Vite build). When
+    | the app is behind a proxy or deployed to a different domain, set
+    | ASSET_URL to the public URL (e.g. https://scan.gnd-net.com) so that
+    | styles and scripts load correctly.
+    |
+    */
+
+    'asset_url' => env('ASSET_URL', env('APP_URL')),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
