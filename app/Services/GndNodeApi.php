@@ -4,10 +4,11 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 
-/**
- * Публичный API ноды GND для блокчейн-сканера (без X-Admin-Token).
- * Базовый URL: config('services.gnd.node_url'), эндпоинты /api/v1/*.
- */
+    /**
+     * Публичный API ноды GND для блокчейн-сканера (без X-Admin-Token).
+     * Базовый URL: config('services.gnd.node_url'), эндпоинты /api/v1/*.
+     * Балансы GND/GANI: из native_balances или token_balances (режим «всё на контрактах»).
+     */
 class GndNodeApi
 {
     public static function baseUrl(): string

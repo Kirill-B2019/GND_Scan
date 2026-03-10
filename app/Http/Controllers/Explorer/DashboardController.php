@@ -31,9 +31,11 @@ class DashboardController extends Controller
         $hasBlock = $blockData && (isset($blockData['ID']) || isset($blockData['id']) || isset($blockData['Height']) || isset($blockData['height']));
         if ($hasBlock) {
             $blocks[] = $blockData;
-            $height = (int) ($blockData['Height'] ?? $blockData['height'] ?? $blockData['ID'] ?? $blockData['id'] ?? 0);
+            // Номер блока в API ноды = height в цепи (GET /api/v1/block/:number)
+            $height = (int) ($blockData['Height'] ?? $blockData['height'] ?? $blockData['Index'] ?? $blockData['index'] ?? $blockData['ID'] ?? $blockData['id'] ?? 0);
             for ($i = 1; $i < 10 && $height - $i >= 0; $i++) {
-                $b = GndNodeApi::getBlockByNumber($height - $i);
+                $prevNumber = $height - $i;
+                $b = GndNodeApi::getBlockByNumber($prevNumber);
                 if (! empty($b['success']) && ! empty($b['data'])) {
                     $blocks[] = $b['data'];
                 }
@@ -79,9 +81,11 @@ class DashboardController extends Controller
         $hasBlock = $blockData && (isset($blockData['ID']) || isset($blockData['id']) || isset($blockData['Height']) || isset($blockData['height']));
         if ($hasBlock) {
             $blocks[] = $blockData;
-            $height = (int) ($blockData['Height'] ?? $blockData['height'] ?? $blockData['ID'] ?? $blockData['id'] ?? 0);
+            // Номер блока в API ноды = height в цепи (GET /api/v1/block/:number)
+            $height = (int) ($blockData['Height'] ?? $blockData['height'] ?? $blockData['Index'] ?? $blockData['index'] ?? $blockData['ID'] ?? $blockData['id'] ?? 0);
             for ($i = 1; $i < 10 && $height - $i >= 0; $i++) {
-                $b = GndNodeApi::getBlockByNumber($height - $i);
+                $prevNumber = $height - $i;
+                $b = GndNodeApi::getBlockByNumber($prevNumber);
                 if (! empty($b['success']) && ! empty($b['data'])) {
                     $blocks[] = $b['data'];
                 }
@@ -112,7 +116,7 @@ class DashboardController extends Controller
             return $metrics;
         }
         $latest = $blocks[0];
-        $height = (int) ($latest['Index'] ?? $latest['index'] ?? $latest['Height'] ?? $latest['height'] ?? $latest['ID'] ?? $latest['id'] ?? 0);
+        $height = (int) ($latest['Height'] ?? $latest['height'] ?? $latest['Index'] ?? $latest['index'] ?? $latest['ID'] ?? $latest['id'] ?? 0);
         if ($height >= 0) {
             $metrics['blocks_count'] = $height;
             $metrics['total_blocks'] = $height;

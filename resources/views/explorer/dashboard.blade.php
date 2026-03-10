@@ -84,7 +84,8 @@
             <div id="dashboard-blocks-list" class="rounded-xl border explorer-border explorer-bg-card overflow-hidden w-full">
                 @forelse($blocks as $block)
                     @php
-                        $id = $block['Index'] ?? $block['index'] ?? $block['ID'] ?? $block['id'] ?? $block['Height'] ?? $block['height'] ?? $block['number'] ?? '—';
+                        // Номер блока для ссылки = height в цепи (API ноды GET /block/:number ищет по height)
+                        $id = $block['Height'] ?? $block['height'] ?? $block['Index'] ?? $block['index'] ?? $block['ID'] ?? $block['id'] ?? $block['number'] ?? '—';
                         $txCount = is_array($block['Transactions'] ?? $block['transactions'] ?? null) ? count($block['Transactions'] ?? $block['transactions']) : ($block['TxCount'] ?? $block['tx_count'] ?? $block['transactions_count'] ?? 0);
                         $ts = $block['Timestamp'] ?? $block['timestamp'] ?? $block['created_at'] ?? '';
                     @endphp
@@ -161,7 +162,7 @@
                 function renderBlocks(blocks) {
                     if (!blocks || !blocks.length) return '<div class="px-4 py-8 explorer-text-muted text-center">Нет данных о блоках</div>';
                     return blocks.map(function(b) {
-                        const id = b.Index ?? b.index ?? b.ID ?? b.id ?? b.Height ?? b.height ?? b.number ?? '—';
+                        const id = b.Height ?? b.height ?? b.Index ?? b.index ?? b.ID ?? b.id ?? b.number ?? '—';
                         const txCount = (b.Transactions || b.transactions) ? (b.Transactions || b.transactions).length : (b.TxCount ?? b.tx_count ?? b.transactions_count ?? 0);
                         const ts = b.Timestamp ?? b.timestamp ?? b.created_at ?? '';
                         const tsAttr = ts ? encodeURIComponent(typeof ts === 'string' ? ts : (ts && ts.toString && ts.toString()) || '') : '';

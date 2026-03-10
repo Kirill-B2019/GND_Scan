@@ -12,7 +12,8 @@
         $status = $tx['Status'] ?? $tx['status'] ?? 'pending';
         $statusClass = ($status === 'confirmed' || $status === 'success') ? 'text-emerald-400' : (($status === 'failed' || $status === 'error') ? 'text-red-400' : 'explorer-primary');
         $statusIcon = ($status === 'confirmed' || $status === 'success') ? '✓' : (($status === 'failed' || $status === 'error') ? '✗' : '⏳');
-        $blockId = $tx['BlockId'] ?? $tx['block_id'] ?? $tx['BlockNumber'] ?? $tx['block_number'] ?? null;
+        // block_number — номер в цепи (GET /block/:number). block_id — внутренний id БД, НЕ использовать для отображения.
+        $blockId = $tx['BlockNumber'] ?? $tx['block_number'] ?? null;
         $ts = $tx['Timestamp'] ?? $tx['timestamp'] ?? null;
         $from = $tx['Sender'] ?? $tx['sender'] ?? $tx['From'] ?? $tx['from'] ?? '—';
         $to = $tx['Recipient'] ?? $tx['recipient'] ?? $tx['To'] ?? $tx['to'] ?? '—';

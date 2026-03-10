@@ -49,7 +49,8 @@
                                 } elseif (in_array($typeSlug, ['mint', 'burn', 'approve'], true)) {
                                     $badgeClass = 'tx-badge--purple-3';
                                 }
-                                $blockId = $tx['BlockId'] ?? $tx['block_id'] ?? $tx['BlockNumber'] ?? $tx['block_number'] ?? null;
+                                // block_number — номер в цепи (GET /block/:number). block_id — внутренний id БД, НЕ использовать для отображения.
+                                $blockId = $tx['BlockNumber'] ?? $tx['block_number'] ?? null;
                                 $from = $tx['Sender'] ?? $tx['sender'] ?? $tx['From'] ?? $tx['from'] ?? '—';
                                 $to = $tx['Recipient'] ?? $tx['recipient'] ?? $tx['To'] ?? $tx['to'] ?? '—';
                                 $value = $tx['Value'] ?? $tx['value'] ?? '0';
